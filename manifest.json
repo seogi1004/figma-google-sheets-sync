@@ -1,0 +1,11 @@
+{
+  "name": "Google Sheets Sync",
+  "id": "1255805112270870719",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma", "figjam"],
+  "networkAccess": {
+    "allowedDomains": ["sheets.googleapis.com"]
+  }
+}
