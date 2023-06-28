@@ -1,14 +1,19 @@
 {
-  "name": "google-sheet-sync",
+  "name": "google-sheets-sync",
   "version": "1.0.0",
-  "description": "",
+  "description": "This plugin synchronizes Google Sheets to variables in Figma.",
   "main": "code.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --mode=development --watch",
     "build": "webpack --mode=production"
   },
-  "author": "Figma",
+  "homepage": "https://github.com/seogi1004/figma-google-sheets-sync/",
+  "author": {
+    "name": "Alvin Hong",
+    "email": "seogi777@gmail.com",
+    "url": "https://alvin.biz/"
+  },
   "license": "MIT",
   "devDependencies": {
     "@figma/plugin-typings": "^1.68.0",

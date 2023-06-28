@@ -35,8 +35,19 @@ figma.ui.onmessage = async (msg) => {
       figma.ui.postMessage({type: 'update', url, collection, columns});
     }
   } else if (msg.type === "sync") {
+    let origin = [];
+
     try {
-      const origin = await fetchGoogleSheets(msg.url);
+      origin = await fetchGoogleSheets(msg.url);
+    } catch(e) {
+      alert("The Google Sheet URL is invalid.");
+    } finally {
+      figma.ui.postMessage({ type: 'done' });
+    }
+
+    if (origin.length - 1 !== msg.columns.length) {
+      alert("The number of columns you set is different from the Google Sheets result.");
+    } else {
       const collections = figma.variables.getLocalVariableCollections();
       let collection = collections.find((collection) => collection.name === msg.collection);
       if (collection !== undefined) collection.remove();
@@ -56,10 +67,6 @@ figma.ui.onmessage = async (msg) => {
       await figma.clientStorage.setAsync("google-sheet-sync:columns", msg.columns);
 
       figma.closePlugin();
-    } catch(e) {
-      alert("The Google Sheet URL is invalid.");
-    } finally {
-      figma.ui.postMessage({ type: 'done' });
     }
   }
 };
