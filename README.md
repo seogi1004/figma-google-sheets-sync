@@ -18,3 +18,8 @@ https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${
 ## Sample URL
 
 https://sheets.googleapis.com/v4/spreadsheets/1iYOtMl4nqwtEgBWq4_B0EcIoSB5bc77OOhPzsm79nIc/values/Sheet1!A2:D?key=AIzaSyA5xA59tkljcFItKX3JDhJ6Dr-Ng8_PmVk
+
+## Set up the rest
+
+1. Enter a name for the collection. If the collection exists, delete it and add it again.
+2. Except for the variable names, describe the modes (columns) separated by commas.
