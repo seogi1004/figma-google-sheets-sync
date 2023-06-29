@@ -53,21 +53,21 @@ function App() {
             <h2>Google Sheets Sync</h2>
           </header>
           <section>
-            <input id="input" type="text" placeholder="https://sheets.googleapis.com/v4/spreadsheets/..." value={url} onInput={onInputUrl} />
+            <input id="input" type="text" placeholder="(Required)" value={url} onInput={onInputUrl} />
             <label htmlFor="input">Google Sheets URL</label>
           </section>
           <section>
-            <input id="input" type="text" placeholder="Messages" value={collection} onInput={onInputCollection} />
+            <input id="input" type="text" placeholder="(Required)" value={collection} onInput={onInputCollection} />
             <label htmlFor="input">Collection Name</label>
           </section>
           <section>
-            <input id="input" type="text" placeholder="ko,en,ja" value={columns} onInput={onInputColumns} />
+            <input id="input" type="text" placeholder="(Optional)" value={columns} onInput={onInputColumns} />
             <label htmlFor="input">Mode Names</label>
           </section>
             { loading ?
                 <footer>Loading...</footer> :
                 <footer>
-                    <button className="brand" onClick={onSync} disabled={url === '' || collection === '' || columns === ''}>Sync</button>
+                    <button className="brand" onClick={onSync} disabled={url === '' || collection === ''}>Sync</button>
                     <button onClick={onCancel}>Cancel</button>
                 </footer>
             }

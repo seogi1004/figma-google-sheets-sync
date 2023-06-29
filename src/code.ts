@@ -36,6 +36,7 @@ figma.ui.onmessage = async (msg) => {
     }
   } else if (msg.type === "sync") {
     let origin = [];
+    let columns = [];
 
     try {
       origin = await fetchGoogleSheets(msg.url);
@@ -45,28 +46,33 @@ figma.ui.onmessage = async (msg) => {
       figma.ui.postMessage({ type: 'done' });
     }
 
+    // 컬럼 개수가 맞지 않을 경우
     if (origin.length - 1 !== msg.columns.length) {
-      alert("The number of columns you set is different from the Google Sheets result.");
+      for (let i = 1; i < origin.length; i++) {
+        columns.push('Mode ' + i);
+      }
     } else {
-      const collections = figma.variables.getLocalVariableCollections();
-      let collection = collections.find((collection) => collection.name === msg.collection);
-      if (collection !== undefined) collection.remove();
-
-      collection = createCollection(msg.collection, msg.columns);
-      const keys = origin[0];
-      keys.forEach((key, rowIndex) => {
-        const values = [];
-        msg.columns.forEach((_, colIndex) => {
-          values.push(origin[colIndex + 1][rowIndex]);
-        });
-        createToken(collection, "STRING", key.split(".").join("_"), values)
-      });
-
-      await figma.clientStorage.setAsync("google-sheet-sync:url", msg.url);
-      await figma.clientStorage.setAsync("google-sheet-sync:collection", msg.collection);
-      await figma.clientStorage.setAsync("google-sheet-sync:columns", msg.columns);
-
-      figma.closePlugin();
+      columns = msg.columns;
     }
+
+    const collections = figma.variables.getLocalVariableCollections();
+    let collection = collections.find((collection) => collection.name === msg.collection);
+    if (collection !== undefined) collection.remove();
+
+    collection = createCollection(msg.collection, columns);
+    const keys = origin[0];
+    keys.forEach((key, rowIndex) => {
+      const values = [];
+      columns.forEach((_, colIndex) => {
+        values.push(origin[colIndex + 1][rowIndex]);
+      });
+      createToken(collection, "STRING", key.split(".").join("_"), values)
+    });
+
+    await figma.clientStorage.setAsync("google-sheet-sync:url", msg.url);
+    await figma.clientStorage.setAsync("google-sheet-sync:collection", msg.collection);
+    await figma.clientStorage.setAsync("google-sheet-sync:columns", columns);
+
+    figma.closePlugin();
   }
 };
