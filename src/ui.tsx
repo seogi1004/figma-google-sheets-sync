@@ -61,7 +61,7 @@ function App() {
             <label htmlFor="input">Collection Name</label>
           </section>
           <section>
-            <input id="input" type="text" placeholder="(Optional)" value={columns} onInput={onInputColumns} />
+            <input id="input" type="text" placeholder="Mode 1,Mode 2,..." value={columns} onInput={onInputColumns} />
             <label htmlFor="input">Mode Names</label>
           </section>
             { loading ?

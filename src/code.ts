@@ -55,11 +55,12 @@ figma.ui.onmessage = async (msg) => {
       columns = msg.columns;
     }
 
+    // 여기서부터 컬렉션 생성 및 데이터 동기화
     const collections = figma.variables.getLocalVariableCollections();
     let collection = collections.find((collection) => collection.name === msg.collection);
     if (collection !== undefined) collection.remove();
-
     collection = createCollection(msg.collection, columns);
+
     const keys = origin[0];
     keys.forEach((key, rowIndex) => {
       const values = [];
@@ -69,9 +70,10 @@ figma.ui.onmessage = async (msg) => {
       createToken(collection, "STRING", key.split(".").join("_"), values)
     });
 
+    // 설정 정보 저장하기
+    await figma.clientStorage.setAsync("google-sheet-sync:columns", columns);
     await figma.clientStorage.setAsync("google-sheet-sync:url", msg.url);
     await figma.clientStorage.setAsync("google-sheet-sync:collection", msg.collection);
-    await figma.clientStorage.setAsync("google-sheet-sync:columns", columns);
 
     figma.closePlugin();
   }
