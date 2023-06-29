@@ -2,6 +2,8 @@
 
 This plugin synchronizes Google Sheets to variables in Figma.
 
+![Intro](https://github.com/seogi1004/figma-google-sheets-sync/assets/1277117/5fcdd86c-e135-46ee-b55c-c49dd53c15d7)
+
 ## Google Sheets API
 
 https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${RANGE}?key=${TOKEN}
