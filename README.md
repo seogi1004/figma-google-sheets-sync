@@ -1,6 +1,6 @@
-# figma-google-sheets-sync
+# Google Sheets Sync (For Variables)
 
-This plugin synchronizes Google Sheets to variables in Figma.
+This plugin synchronizes from Google Sheets to Figma Variables. It supports multiple columns as well as simple key-value forms.
 
 ![Intro](https://github.com/seogi1004/figma-google-sheets-sync/assets/1277117/5fcdd86c-e135-46ee-b55c-c49dd53c15d7)
 
