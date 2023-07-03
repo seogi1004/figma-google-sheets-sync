@@ -4,10 +4,12 @@ async function fetchGoogleSheets(url) {
   return json.values;
 }
 
-function createCollection(name, columns) {
+function createCollection(name, columns, columnCount) {
   const collection = figma.variables.createVariableCollection(name);
-  columns.forEach((col) => {
-    collection.addMode(col.trim());
+  columns.forEach((col, colIndex) => {
+    if (colIndex < columnCount) {
+      collection.addMode(col.trim());
+    }
   })
   collection.removeMode(collection.modes[0].modeId);
   return collection;
@@ -47,7 +49,7 @@ figma.ui.onmessage = async (msg) => {
     }
 
     // 컬럼 개수가 맞지 않을 경우
-    if (origin.length - 1 !== msg.columns.length) {
+    if (msg.columns.length === 0) {
       for (let i = 1; i < origin.length; i++) {
         columns.push('Mode ' + i);
       }
@@ -59,13 +61,17 @@ figma.ui.onmessage = async (msg) => {
     const collections = figma.variables.getLocalVariableCollections();
     let collection = collections.find((collection) => collection.name === msg.collection);
     if (collection !== undefined) collection.remove();
-    collection = createCollection(msg.collection, columns);
+
+    const columnCount = origin.length - 1;
+    collection = createCollection(msg.collection, columns, columnCount);
 
     const keys = origin[0];
     keys.forEach((key, rowIndex) => {
       const values = [];
       columns.forEach((_, colIndex) => {
-        values.push(origin[colIndex + 1][rowIndex]);
+        if (colIndex < columnCount) {
+          values.push(origin[colIndex + 1][rowIndex]);
+        }
       });
       createToken(collection, "STRING", key.split(".").join("_"), values)
     });

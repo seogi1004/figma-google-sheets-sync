@@ -18,7 +18,14 @@ function App() {
     const onSync = () => {
         setLoading(true);
         parent.postMessage(
-        { pluginMessage: { type: 'sync', collection, url, columns: columns.split(',') } },
+        {
+            pluginMessage: {
+                type: 'sync',
+                collection,
+                url,
+                columns: columns === '' ? [] : columns.split(',')
+            }
+        },
         "*"
         );
     };
