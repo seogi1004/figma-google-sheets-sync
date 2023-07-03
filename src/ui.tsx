@@ -34,7 +34,7 @@ function App() {
     }
 
     const onLink = () => {
-        window.open("https://docs.google.com/spreadsheets/d/1TkA1RFmDDSRZmisx3KS9ETev6-ZaSD6R4fSzsjJ1IFw/edit?usp=sharing");
+        window.open("https://docs.google.com/spreadsheets/d/1iYOtMl4nqwtEgBWq4_B0EcIoSB5bc77OOhPzsm79nIc/edit?usp=sharing");
     };
 
     addEventListener("message", (e) => {
