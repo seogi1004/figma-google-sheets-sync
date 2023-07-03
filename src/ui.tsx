@@ -33,8 +33,8 @@ function App() {
         setColumns(e.target.value);
     }
 
-    const onCancel = () => {
-        parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+    const onLink = () => {
+        window.open("https://docs.google.com/spreadsheets/d/1TkA1RFmDDSRZmisx3KS9ETev6-ZaSD6R4fSzsjJ1IFw/edit?usp=sharing");
     };
 
     addEventListener("message", (e) => {
@@ -49,28 +49,25 @@ function App() {
     })
     return (
         <main>
-          <header>
-            <h2>Google Sheets Sync</h2>
-          </header>
           <section>
-            <input id="input" type="text" placeholder="(Required)" value={url} onInput={onInputUrl} />
-            <label htmlFor="input">Google Sheets URL</label>
+            <label>Google Sheets URL</label>
+            <input type="text" placeholder="(Required)" value={url} onInput={onInputUrl} />
           </section>
           <section>
-            <input id="input" type="text" placeholder="(Required)" value={collection} onInput={onInputCollection} />
-            <label htmlFor="input">Collection Name</label>
+            <label>Collection Name</label>
+            <input type="text" placeholder="(Required)" value={collection} onInput={onInputCollection} />
           </section>
           <section>
-            <input id="input" type="text" placeholder="Mode 1,Mode 2,..." value={columns} onInput={onInputColumns} />
-            <label htmlFor="input">Mode Names</label>
+            <label>Mode Names</label>
+            <input type="text" placeholder="Mode 1,Mode 2,..." value={columns} onInput={onInputColumns} />
           </section>
-            { loading ?
-                <footer>Loading...</footer> :
-                <footer>
-                    <button className="brand" onClick={onSync} disabled={url === '' || collection === ''}>Sync</button>
-                    <button onClick={onCancel}>Cancel</button>
-                </footer>
-            }
+            <section className={"footer"}>
+                <button onClick={onLink}>Open Template Spreadsheet</button>
+                { loading ?
+                    <button>Now Loading...</button> :
+                    <button className="brand" onClick={onSync} disabled={url === '' || collection === ''}>Import & Sync Variables</button>
+                }
+            </section>
         </main>
     );
 }

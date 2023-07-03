@@ -18,6 +18,7 @@ html,
 body,
 main {
   height: 100%;
+  padding-top: 2px;
 }
 
 body,
@@ -25,8 +26,7 @@ input,
 button {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  font-size: 1rem;
-  text-align: center;
+  font-size: 14px;
 }
 
 body {
@@ -79,6 +79,10 @@ input:focus-visible {
   outline-color: var(--color-border-focus);
 }
 
+button, input {
+  width: 308px;
+}
+
 svg {
   stroke: var(--color-icon, rgba(0, 0, 0, 0.9));
 }
@@ -91,17 +95,16 @@ main {
 }
 
 section {
-  align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   margin-bottom: 1rem;
 }
 section > * + * {
   margin-top: 0.5rem;
 }
-footer > * + * {
-  margin-left: 0.5rem;
+
+section.footer {
+  margin-top: 24px;
 }
 
 img {

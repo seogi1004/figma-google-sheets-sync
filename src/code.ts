@@ -21,7 +21,7 @@ function createToken(collection, type, name, values) {
   return token;
 }
 
-figma.showUI(__html__, { themeColors: true, height: 400 });
+figma.showUI(__html__, { themeColors: true, width: 360, height: 380 });
 
 figma.ui.onmessage = async (msg) => {
   if (msg.type === 'cancel') {
