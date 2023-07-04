@@ -34,9 +34,13 @@ figma.ui.onmessage = async (msg) => {
     const columns = await figma.clientStorage.getAsync("google-sheet-sync:columns");
 
     if (url !== undefined && collection !== undefined && columns !== undefined) {
-      figma.ui.postMessage({type: 'update', url, collection, columns});
+      figma.ui.postMessage({ type: 'update', url, collection, columns });
     }
-  } else if (msg.type === "sync") {
+  } else if (msg.type === 'check') {
+    const collections = figma.variables.getLocalVariableCollections();
+    let collection = collections.find((collection) => collection.name === msg.collection);
+    figma.ui.postMessage({ type: 'check', exist: collection !== undefined });
+  } else if (msg.type === 'sync') {
     let origin = [];
     let columns = [];
 

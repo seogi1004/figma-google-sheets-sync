@@ -7,6 +7,7 @@ function App() {
     const [collection, setCollection] = React.useState("");
     const [url, setUrl] = React.useState("");
     const [columns, setColumns] = React.useState("");
+    const [exist, setExist] = React.useState(false);
 
     React.useEffect(() => {
         parent.postMessage(
@@ -29,9 +30,21 @@ function App() {
         "*"
         );
     };
+    const onCheckCollection = (collection) => {
+        parent.postMessage(
+            {
+                pluginMessage: {
+                    type: 'check',
+                    collection,
+                }
+            },
+            "*"
+        );
+    }
 
     const onInputCollection = (e) => {
         setCollection(e.target.value);
+        onCheckCollection(e.target.value);
     }
     const onInputUrl = (e) => {
         setUrl(e.target.value);
@@ -52,6 +65,9 @@ function App() {
             setCollection(data.collection);
             setUrl(data.url);
             setColumns(data.columns.join(","));
+            onCheckCollection(data.collection);
+        } else if (data.type === 'check') {
+            setExist(data.exist);
         }
     })
     return (
@@ -60,9 +76,10 @@ function App() {
             <label>Google Sheets URL</label>
             <input type="text" placeholder="(Required)" value={url} onInput={onInputUrl} />
           </section>
-          <section>
+          <section className={"collection"}>
             <label>Collection Name</label>
             <input type="text" placeholder="(Required)" value={collection} onInput={onInputCollection} />
+              { collection !== '' ? <span className={exist ? 'exist' : 'empty'}>{ exist ? 'Exist' : 'Empty'}</span> : <span></span> }
           </section>
           <section>
             <label>Mode Names</label>
