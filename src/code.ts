@@ -8,10 +8,12 @@ function createCollection(name, columns, columnCount) {
   const collection = figma.variables.createVariableCollection(name);
   columns.forEach((col, colIndex) => {
     if (colIndex < columnCount) {
-      collection.addMode(col.trim());
+      if (colIndex === 0)
+        collection.renameMode(collection.modes[0].modeId, col.trim());
+      else
+        collection.addMode(col.trim());
     }
   })
-  collection.removeMode(collection.modes[0].modeId);
   return collection;
 }
 
@@ -25,7 +27,10 @@ function createToken(collection, type, name, values) {
 
 function updateToken(collection, type, token, values) {
   values.forEach((value, index) => {
-    token.setValueForMode(collection.modes[index].modeId, value);
+    const modeId = collection.modes[index].modeId;
+    if (token.valuesByMode[modeId] !== value) {
+      token.setValueForMode(modeId, value);
+    }
   });
   return token;
 }
