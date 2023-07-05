@@ -23,6 +23,13 @@ function createToken(collection, type, name, values) {
   return token;
 }
 
+function updateToken(collection, type, token, values) {
+  values.forEach((value, index) => {
+    token.setValueForMode(collection.modes[index].modeId, value);
+  });
+  return token;
+}
+
 figma.showUI(__html__, { themeColors: true, width: 360, height: 380 });
 
 figma.ui.onmessage = async (msg) => {
@@ -64,21 +71,40 @@ figma.ui.onmessage = async (msg) => {
     // 여기서부터 컬렉션 생성 및 데이터 동기화
     const collections = figma.variables.getLocalVariableCollections();
     let collection = collections.find((collection) => collection.name === msg.collection);
-    if (collection !== undefined) collection.remove();
 
     const columnCount = origin.length - 1;
-    collection = createCollection(msg.collection, columns, columnCount);
-
     const keys = origin[0];
-    keys.forEach((key, rowIndex) => {
-      const values = [];
-      columns.forEach((_, colIndex) => {
-        if (colIndex < columnCount) {
-          values.push(origin[colIndex + 1][rowIndex]);
-        }
+
+    if (collection !== undefined) {
+      const variableMap = {};
+      collection.variableIds.forEach((id) => {
+        const variable = figma.variables.getVariableById(id);
+        variableMap[variable.name] = variable;
+      })
+
+      keys.forEach((key, rowIndex) => {
+        const values = [];
+        columns.forEach((_, colIndex) => {
+          if (colIndex < columnCount) {
+            values.push(origin[colIndex + 1][rowIndex]);
+          }
+        });
+        if (variableMap[key])
+          updateToken(collection, "STRING", variableMap[key], values)
       });
-      createToken(collection, "STRING", key.split(".").join("_"), values)
-    });
+    } else {
+      collection = createCollection(msg.collection, columns, columnCount);
+
+      keys.forEach((key, rowIndex) => {
+        const values = [];
+        columns.forEach((_, colIndex) => {
+          if (colIndex < columnCount) {
+            values.push(origin[colIndex + 1][rowIndex]);
+          }
+        });
+        createToken(collection, "STRING", key.split(".").join("_"), values)
+      });
+    }
 
     // 설정 정보 저장하기
     await figma.clientStorage.setAsync("google-sheet-sync:columns", columns);
