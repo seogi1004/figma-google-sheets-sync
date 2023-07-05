@@ -73,10 +73,14 @@ input {
   color: 1px solid var(--color-text);
   padding: 0.5rem;
 }
-
 input:focus-visible {
   border-color: var(--color-border-focus);
   outline-color: var(--color-border-focus);
+}
+input:disabled {
+  user-select: none;
+  opacity: 0.5;
+  cursor: default;
 }
 
 button, input {

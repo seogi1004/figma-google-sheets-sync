@@ -68,6 +68,7 @@ function App() {
             onCheckCollection(data.collection);
         } else if (data.type === 'check') {
             setExist(data.exist);
+            setColumns(data.columns.join(","));
         }
     })
     return (
@@ -83,7 +84,7 @@ function App() {
           </section>
           <section>
             <label>Mode Names</label>
-            <input type="text" placeholder="Mode 1,Mode 2,..." value={columns} onInput={onInputColumns} />
+            <input type="text" placeholder="Mode 1,Mode 2,..." value={columns} disabled={exist} onInput={onInputColumns} />
           </section>
             <section className={"footer"}>
                 <button onClick={onLink}>Open Template Spreadsheet</button>
