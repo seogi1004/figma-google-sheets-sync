@@ -86,11 +86,17 @@ figma.ui.onmessage = async (msg) => {
 
     if (collection !== undefined) {
       const variableMap = {};
+
+      // 현재 컬렉션에 있는 변수 맵에 저장
       collection.variableIds.forEach((id) => {
         const variable = figma.variables.getVariableById(id);
-        variableMap[variable.name] = variable;
+        variableMap[variable.name] = {
+          variable,
+          modified: false,
+        };
       })
 
+      // 변수 맵에 있으면 수정, 없으면 추가
       keys.forEach((key, rowIndex) => {
         const values = [];
         const newKey = key.split(".").join("_");
@@ -101,9 +107,17 @@ figma.ui.onmessage = async (msg) => {
           }
         });
         if (variableMap[newKey]) {
-          updateToken(collection, "STRING", variableMap[newKey], values);
+          updateToken(collection, "STRING", variableMap[newKey].variable, values);
+          variableMap[newKey].modified = true;
         } else {
           createToken(collection, "STRING", newKey, values);
+        }
+      });
+
+      // 변수 맵에 수정된게 없으면 삭제
+      Object.keys(variableMap).forEach((key) => {
+        if (!variableMap[key].modified) {
+          variableMap[key].variable.remove();
         }
       });
     } else {
