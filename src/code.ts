@@ -84,13 +84,18 @@ figma.ui.onmessage = async (msg) => {
 
       keys.forEach((key, rowIndex) => {
         const values = [];
+        const newKey = key.split(".").join("_");
+
         columns.forEach((_, colIndex) => {
           if (colIndex < columnCount) {
             values.push(origin[colIndex + 1][rowIndex]);
           }
         });
-        if (variableMap[key])
-          updateToken(collection, "STRING", variableMap[key], values)
+        if (variableMap[newKey]) {
+          updateToken(collection, "STRING", variableMap[newKey], values);
+        } else {
+          createToken(collection, "STRING", newKey, values);
+        }
       });
     } else {
       collection = createCollection(msg.collection, columns, columnCount);
