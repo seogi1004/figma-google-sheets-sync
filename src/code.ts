@@ -85,6 +85,11 @@ figma.ui.onmessage = async (msg) => {
     const keys = origin[0];
 
     if (collection !== undefined) {
+      if (columns.length !== columnCount) {
+        alert("The number of collection modes and the number of data columns are different.");
+        return;
+      }
+
       const variableMap = {};
 
       // 현재 컬렉션에 있는 변수 맵에 저장
