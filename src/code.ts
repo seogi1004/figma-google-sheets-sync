@@ -62,6 +62,10 @@ figma.ui.onmessage = async (msg) => {
 
     try {
       origin = await fetchGoogleSheets(msg.url);
+      if (origin === undefined) {
+        alert("The data does not exist, please check the data in your Google Sheet.");
+        return;
+      }
     } catch(e) {
       alert("The Google Sheet URL is invalid.");
     } finally {
