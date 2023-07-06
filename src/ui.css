@@ -112,12 +112,22 @@ section > * + * {
 }
 
 section.footer {
-  margin-top: 10px;
+  margin-top: 8px;
 }
 section.footer > .info {
   font-size: 12px;
   text-align: right;
   opacity: 0.6;
+  height: 12px;
+}
+section.footer > .info > *:not(:last-child) {
+  margin-right: 8px;
+}
+section.footer > .info > .add {
+  color: #2C6AFD;
+}
+section.footer > .info > .delete {
+  color: #DF2C34;
 }
 section.collection {
   position: relative;

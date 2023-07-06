@@ -8,7 +8,10 @@ function App() {
     const [url, setUrl] = React.useState("");
     const [columns, setColumns] = React.useState("");
     const [exist, setExist] = React.useState(false);
-    const [count, setCount] = React.useState(0);
+    const [addCount, setAddCount] = React.useState(0);
+    const [modifyCount, setModifyCount] = React.useState(0);
+    const [deleteCount, setDeleteCount] = React.useState(0);
+    const [isLoaded, setIsLoaded] = React.useState(false);
 
     React.useEffect(() => {
         parent.postMessage(
@@ -21,7 +24,10 @@ function App() {
             if (data.type === "done") {
                 setLoading(false);
             } else if (data.type === "finish") {
-                setCount(data.count);
+                setAddCount(data.add);
+                setModifyCount(data.modify);
+                setDeleteCount(data.delete);
+                setIsLoaded(true);
             } else if (data.type === "update") {
                 setCollection(data.collection);
                 setUrl(data.url);
@@ -91,9 +97,13 @@ function App() {
             <input type="text" placeholder="Mode 1,Mode 2,..." value={columns} disabled={exist} onInput={onInputColumns} />
           </section>
             <section className="footer">
-                { count === 0 ?
-                    <div className="info">&nbsp;</div> :
-                    <div className="info">{ count } values have been changed!!</div>
+                {addCount === 0 && modifyCount === 0 && deleteCount === 0 ?
+                    <div className="info">{ isLoaded ? "No data has been changed!!" : "" }</div> :
+                    <div className="info">
+                        <span className="add">{addCount} added</span>
+                        <span className="modify">{modifyCount} modified</span>
+                        <span className="delete">{deleteCount} deleted</span>
+                    </div>
                 }
                 <button onClick={onLink}>Open Template Spreadsheet</button>
                 { loading ?

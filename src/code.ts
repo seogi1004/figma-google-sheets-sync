@@ -21,19 +21,23 @@ function createToken(collection, type, name, values, payload) {
   const token = figma.variables.createVariable(name, collection.id, type);
   values.forEach((value, index) => {
     token.setValueForMode(collection.modes[index].modeId, value);
-    payload.count += 1;
   });
+
+  payload.add += 1;
   return token;
 }
 
 function updateToken(collection, type, token, values, payload) {
+  let isModified = false;
   values.forEach((value, index) => {
     const modeId = collection.modes[index].modeId;
     if (token.valuesByMode[modeId] !== value) {
       token.setValueForMode(modeId, value);
-      payload.count += 1;
+      isModified = true;
     }
   });
+
+  if (isModified) payload.modify += 1;
   return token;
 }
 
@@ -60,7 +64,7 @@ figma.ui.onmessage = async (msg) => {
     });
   } else if (msg.type === 'sync') {
     const payloadForFinish = {
-      type: 'finish', count: 0
+      type: 'finish', add: 0, modify: 0, delete: 0, changed: false
     };
     let origin = [];
     let columns = [];
@@ -132,6 +136,7 @@ figma.ui.onmessage = async (msg) => {
       Object.keys(variableMap).forEach((key) => {
         if (!variableMap[key].modified) {
           variableMap[key].variable.remove();
+          payloadForFinish.delete += 1;
         }
       });
     } else {
