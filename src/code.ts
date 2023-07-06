@@ -17,19 +17,21 @@ function createCollection(name, columns, columnCount) {
   return collection;
 }
 
-function createToken(collection, type, name, values) {
+function createToken(collection, type, name, values, payload) {
   const token = figma.variables.createVariable(name, collection.id, type);
   values.forEach((value, index) => {
     token.setValueForMode(collection.modes[index].modeId, value);
+    payload.count += 1;
   });
   return token;
 }
 
-function updateToken(collection, type, token, values) {
+function updateToken(collection, type, token, values, payload) {
   values.forEach((value, index) => {
     const modeId = collection.modes[index].modeId;
     if (token.valuesByMode[modeId] !== value) {
       token.setValueForMode(modeId, value);
+      payload.count += 1;
     }
   });
   return token;
@@ -41,9 +43,9 @@ figma.ui.onmessage = async (msg) => {
   if (msg.type === 'cancel') {
     figma.closePlugin();
   } else if (msg.type === 'load') {
-    const url = await figma.clientStorage.getAsync("google-sheet-sync:url");
-    const collection = await figma.clientStorage.getAsync("google-sheet-sync:collection");
-    const columns = await figma.clientStorage.getAsync("google-sheet-sync:columns");
+    const url = await figma.clientStorage.getAsync(`${figma.currentPage.id}:url`);
+    const collection = await figma.clientStorage.getAsync(`${figma.currentPage.id}:collection`);
+    const columns = await figma.clientStorage.getAsync(`${figma.currentPage.id}:columns`);
 
     if (url !== undefined && collection !== undefined && columns !== undefined) {
       figma.ui.postMessage({
@@ -57,6 +59,9 @@ figma.ui.onmessage = async (msg) => {
       type: 'check', exist: collection !== undefined, columns: collection !== undefined ? collection.modes.map((mode) => mode.name) : []
     });
   } else if (msg.type === 'sync') {
+    const payloadForFinish = {
+      type: 'finish', count: 0
+    };
     let origin = [];
     let columns = [];
 
@@ -116,10 +121,10 @@ figma.ui.onmessage = async (msg) => {
           }
         });
         if (variableMap[newKey]) {
-          updateToken(collection, "STRING", variableMap[newKey].variable, values);
+          updateToken(collection, "STRING", variableMap[newKey].variable, values, payloadForFinish);
           variableMap[newKey].modified = true;
         } else {
-          createToken(collection, "STRING", newKey, values);
+          createToken(collection, "STRING", newKey, values, payloadForFinish);
         }
       });
 
@@ -139,15 +144,16 @@ figma.ui.onmessage = async (msg) => {
             values.push(origin[colIndex + 1][rowIndex]);
           }
         });
-        createToken(collection, "STRING", key.split(".").join("_"), values)
+        createToken(collection, "STRING", key.split(".").join("_"), values, payloadForFinish);
       });
     }
 
-    // 설정 정보 저장하기
-    await figma.clientStorage.setAsync("google-sheet-sync:columns", columns);
-    await figma.clientStorage.setAsync("google-sheet-sync:url", msg.url);
-    await figma.clientStorage.setAsync("google-sheet-sync:collection", msg.collection);
+    // 변경된 모드 개수 전송하기
+    figma.ui.postMessage(payloadForFinish);
 
-    figma.closePlugin();
+    // 설정 정보 저장하기
+    await figma.clientStorage.setAsync(`${figma.currentPage.id}:url`, msg.url);
+    await figma.clientStorage.setAsync(`${figma.currentPage.id}:collection`, msg.collection);
+    await figma.clientStorage.setAsync(`${figma.currentPage.id}:columns`, columns);
   }
 };

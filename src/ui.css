@@ -66,6 +66,10 @@ button.brand {
   --color-border: transparent;
   --color-border-focus: var(--color-border-brand-focus);
 }
+button.loading {
+  user-select: none;
+  cursor: progress;
+}
 
 input {
   background: 1px solid var(--color-bg);
@@ -108,7 +112,12 @@ section > * + * {
 }
 
 section.footer {
-  margin-top: 24px;
+  margin-top: 10px;
+}
+section.footer > .info {
+  font-size: 12px;
+  text-align: right;
+  opacity: 0.6;
 }
 section.collection {
   position: relative;
