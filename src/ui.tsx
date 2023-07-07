@@ -13,26 +13,6 @@ function App() {
     const [deleteCount, setDeleteCount] = React.useState(0);
     const [isLoaded, setIsLoaded] = React.useState(false);
 
-    const figmaEventHandler = (e) => {
-        const data = e.data.pluginMessage;
-        if (data.type === "done") {
-            setLoading(false);
-        } else if (data.type === "finish") {
-            setAddCount(data.add);
-            setModifyCount(data.modify);
-            setDeleteCount(data.delete);
-            setIsLoaded(true);
-        } else if (data.type === "update") {
-            setCollection(data.collection);
-            setUrl(data.url);
-            setColumns(data.columns.join(","));
-            onCheckCollection(data.collection);
-        } else if (data.type === 'check') {
-            setExist(data.exist);
-            setColumns(data.columns.join(","));
-        }
-    };
-
     const onSync = () => {
         setLoading(true);
         parent.postMessage(
@@ -72,6 +52,26 @@ function App() {
 
     const onLink = () => {
         window.open("https://docs.google.com/spreadsheets/d/1iYOtMl4nqwtEgBWq4_B0EcIoSB5bc77OOhPzsm79nIc/edit?usp=sharing");
+    };
+
+    const figmaEventHandler = (e) => {
+        const data = e.data.pluginMessage;
+        if (data.type === "done") {
+            setLoading(false);
+        } else if (data.type === "finish") {
+            setAddCount(data.add);
+            setModifyCount(data.modify);
+            setDeleteCount(data.delete);
+            setIsLoaded(true);
+        } else if (data.type === "update") {
+            setCollection(data.collection);
+            setUrl(data.url);
+            setColumns(data.columns.join(","));
+            onCheckCollection(data.collection);
+        } else if (data.type === 'check') {
+            setExist(data.exist);
+            setColumns(data.columns.join(","));
+        }
     };
 
     React.useEffect(() => {
